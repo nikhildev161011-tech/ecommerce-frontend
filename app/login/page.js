@@ -19,7 +19,8 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://ecommerce-backend-pms7.onrender.com';
+      const res = await fetch(`${backendUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
