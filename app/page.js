@@ -20,9 +20,10 @@ function ProductContent() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/products');
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://ecommerce-backend-pms7.onrender.com';
+      const res = await fetch(`${backendUrl}/api/products`);
       const data = await res.json();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error fetching products:', err);
     } finally {
@@ -35,12 +36,12 @@ function ProductContent() {
   }, []);
 
   const filteredProducts = products.filter((p) => {
-    const matchesCategory = selectedCategory === 'All' || p.category.toLowerCase() === selectedCategory.toLowerCase();
+    const matchesCategory = selectedCategory === 'All' || p.category?.toLowerCase() === selectedCategory.toLowerCase();
     const query = search.toLowerCase();
     const matchesSearch = !search || (
-      p.name.toLowerCase().includes(query) ||
-      p.category.toLowerCase().includes(query) ||
-      p.description.toLowerCase().includes(query)
+      p.name?.toLowerCase().includes(query) ||
+      p.category?.toLowerCase().includes(query) ||
+      p.description?.toLowerCase().includes(query)
     );
     return matchesCategory && matchesSearch;
   });
@@ -102,7 +103,7 @@ function ProductContent() {
         </div>
       )}
 
-      {/* Products Grid: 2 Columns on Mobile, 4 Columns on Desktop */}
+      {/* Products Grid */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20">
           <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4" />
@@ -131,7 +132,7 @@ function ProductContent() {
               <div className="relative w-full h-36 sm:h-52 bg-slate-950 overflow-hidden">
                 <Image
                   src={product.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800'}
-                  alt={product.name}
+                  alt={product.name || 'Product'}
                   fill
                   unoptimized
                   sizes="(max-width: 768px) 50vw, 25vw"
@@ -158,7 +159,7 @@ function ProductContent() {
                   <div>
                     <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-wider block font-semibold leading-none mb-0.5">Price</span>
                     <span className="text-xs sm:text-lg font-black text-white whitespace-nowrap">
-                      ₹{product.price.toLocaleString('en-IN')}
+                      ₹{product.price ? product.price.toLocaleString('en-IN') : '0'}
                     </span>
                   </div>
 
