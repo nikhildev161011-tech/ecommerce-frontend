@@ -16,7 +16,8 @@ export default function ProductDetailPage() {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`);
+        const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://ecommerce-backend-pms7.onrender.com';
+        const res = await fetch(`${backendUrl}/api/products/${id}`);
         const data = await res.json();
         setProduct(data);
       } catch (err) {
@@ -96,7 +97,7 @@ export default function ProductDetailPage() {
             {product.name}
           </h1>
           <p className="text-3xl font-black text-blue-400 mb-4">
-            ₹{product.price.toLocaleString('en-IN')}
+            ₹{product.price ? product.price.toLocaleString('en-IN') : '0'}
           </p>
           <p className="text-slate-300 text-sm leading-relaxed mb-6">
             {product.description}
