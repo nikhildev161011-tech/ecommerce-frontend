@@ -20,7 +20,8 @@ export default function MyOrdersPage() {
 
     async function fetchOrders() {
       try {
-        const res = await fetch('http://localhost:5000/api/orders/myorders', {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ecommerce-backend-pms7.onrender.com';
+        const res = await fetch(`${API_BASE}/api/orders/myorders`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
