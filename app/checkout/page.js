@@ -93,7 +93,7 @@ export default function CheckoutPage() {
           product: item._id,
           name: item.name,
           qty: item.qty,
-          quantity: item.qty, // दोनों भेज रहे हैं ताकि MongoDB का 'Path quantity is required' एरर न आए
+          quantity: item.qty,
           price: item.price,
           image: item.images?.[0] || '',
         })),
@@ -102,7 +102,8 @@ export default function CheckoutPage() {
         totalPrice: total,
       };
 
-      const res = await fetch('http://localhost:5000/api/orders', {
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://ecommerce-backend-pms7.onrender.com';
+      const res = await fetch(`${backendUrl}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
